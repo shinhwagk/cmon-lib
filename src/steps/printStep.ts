@@ -1,4 +1,4 @@
-import { IStep } from "../IStep";
+import { IStep } from "../step";
 
 function PrintStep<P, M>(name: string, PrintFunc: (point: P, elemt: M) => void): IStep {
     name = "Print-" + name;

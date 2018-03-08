@@ -1,4 +1,4 @@
-import { IStep } from "../istep";
+import { IStep } from "../step";
 
 function CronStep<P, M>(name: string, interval: number, points: P[], execFunc: (point: P) => Promise<M[]>,
                         single: boolean = true): IStep {

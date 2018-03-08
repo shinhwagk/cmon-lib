@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import * as http from "http";
 
-import { IStep } from "./IStep";
+import { IStep } from "./step";
 
 function RunTasks(flow: Array<[IStep, IStep[]]>) {
     const ee: EventEmitter = new EventEmitter();

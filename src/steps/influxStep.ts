@@ -1,6 +1,6 @@
 import * as Influx from "influx";
 
-import { IStep } from "../IStep";
+import { IStep } from "../step";
 
 function InfluxStep<P, M>(name: string, database: string, measurement: string,
                           tags: (point: P, elem: M) => {},

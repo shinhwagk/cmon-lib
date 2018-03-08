@@ -1,6 +1,6 @@
 import { createHttpServer, ICtx, IRoute } from "../httpServer";
 
-import { IStep } from "../IStep";
+import { IStep } from "../step";
 
 export function HttpServerStep<P, M>(name: string, method: string, path: string,
                                      h: (emit: any) => (ctx: ICtx<any>) => void): IStep {
