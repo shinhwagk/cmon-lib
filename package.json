@@ -6,7 +6,7 @@
   "types": "./dist/src/index.d.js",
   "scripts": {
     "build": "gulp tsc",
-    "test": "gulp test"
+    "test": "gulp && mocha dist/test/**/*.js"
   },
   "author": "",
   "license": "ISC",
