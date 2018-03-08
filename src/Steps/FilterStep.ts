@@ -1,4 +1,4 @@
-import { IEmitDownStream, IStep } from "../IStep";
+import { IEmitDownStream, IStep } from "../istep";
 
 function FilterStep<P, M>(name: string, filterFunc: (elem: M) => boolean): IStep {
     name = "Filter-" + name;

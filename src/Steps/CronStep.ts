@@ -1,11 +1,11 @@
-import { IStep } from "../IStep";
+import { IStep } from "../istep";
 
 function CronStep<P, M>(name: string, interval: number, points: P[], execFunc: (point: P) => Promise<M[]>,
                         single: boolean = true): IStep {
     name = "Cron-" + name;
     const selfProcess = (emit: any) => {
         setInterval(() => {
-            const date = (new Date()).getTime();
+            const currDate = (new Date()).getTime();
             points.forEach((p) => {
                 execFunc(p)
                     .then((r) => {

@@ -2,10 +2,12 @@ import * as Influx from "influx";
 
 import { IStep } from "../IStep";
 
-function InfluxStep<P, M>(name: string, measurement: string,
+function InfluxStep<P, M>(name: string, database: string, measurement: string,
                           tags: (point: P, elem: M) => {},
                           values: (point: P, elem: M) => {}): IStep {
-    const influx = new Influx.InfluxDB({ host: "influxdb.cmons.org", database: "mydb" });
+    name = "Influx-" + name;
+
+    const influx = new Influx.InfluxDB({ host: "influxdb.cmons.org", database });
 
     const stepProcess = (emit: any) => (point: P, elem: M) => {
         console.info(new Date(), elem, point, tags(point, elem), values(point, elem));
