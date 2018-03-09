@@ -31,3 +31,27 @@ describe("route url not match", () => {
         });
     });
 });
+
+describe("extract url parameter", () => {
+    const testdata1: [string, string] = ["/test/1", "/test/:id"];
+    const testdata2 = ["/test/1/name/xiaoming", "/test/:id/name/:name"];
+    const testdata3 = ["/test/1/val/22", "/test/:id/val/:val"];
+
+    it("params id === 1", () => {
+        const [reqUrl, routeUrl] = testdata1;
+        const params = httpServer.extractParams<{ id: number }>(reqUrl, routeUrl);
+        assert.equal(params.id, 1);
+    });
+    it("params id === 1, name === xiaoming", () => {
+        const [reqUrl, routeUrl] = testdata2;
+        const params = httpServer.extractParams<{ id: number, name: string }>(reqUrl, routeUrl);
+        assert.equal(params.id, 1);
+    });
+
+    it("params id === 1, name === xiaoming", () => {
+        const [reqUrl, routeUrl] = testdata3;
+        const params = httpServer.extractParams<{ id: number, name: string }>(reqUrl, routeUrl);
+        assert.notEqual(params.id, 2);
+    });
+
+});

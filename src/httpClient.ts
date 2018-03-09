@@ -14,7 +14,7 @@ function httpRequest<R>(options: http.RequestOptions, reqbody?: string): Promise
                 resbody.push(chunk);
                 resolve(JSON.parse(resbody.toString()) as R);
             });
-            res.on("end", () => console.log("No more data in response."));
+            res.on("end", () => null);
         });
 
         req.on("error", (e) => { console.error(`problem with request: ${e.message}`); reject(e); });

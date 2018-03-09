@@ -16,15 +16,16 @@ export function createHttpServer(...router: IRoute[]) {
     const server = http.createServer(
         (request: http.IncomingMessage, response: http.ServerResponse) => {
             const route: IRoute = router.filter(routeMatch(request.method as string, request.url as string))[0];
-            const ctx: ICtx<any> = { res: response } as ICtx<any>;
-            console.info(Object.keys(ctx), 99999);
+            const reqctx = { body: [], param: {} };
+            const ctx: ICtx<any> = { res: response, req: reqctx } as ICtx<any>;
             ctx.res.setHeader("Content-Type", "application/json");
             if (route) {
+                const params = extractParams(request.url as string, route.path as string);
                 const body: Buffer[] = [];
                 request.on("data", (chunk: Buffer) => {
                     body.push(chunk);
                     ctx.req.body = body;
-                    ctx.req.param = { id: 1 };
+                    ctx.req.param = params;
                 });
                 request.on("end", () => route.handler(ctx));
             } else {
@@ -38,13 +39,25 @@ export function createHttpServer(...router: IRoute[]) {
     return server;
 }
 
-export const routeMatch = (reqMethod: string, reqUrl: string) => (route: IRoute) => {
-    if (reqMethod === route.method) {
-        const routePath = route.path.split("/").slice(1);
+export const routeMatch = (reqMethod: string, reqUrl: string) => (routeUrl: IRoute) => {
+    if (reqMethod === routeUrl.method) {
+        const routePaths = routeUrl.path.split("/").slice(1);
         const reqPaths = reqUrl.split("/").slice(1);
-        const matchNumber = routePath.filter((path, idx) => !path.startsWith(":") && path === reqPaths[idx]);
-        return matchNumber.length === routePath.filter((p) => !p.startsWith(":")).length ? true : false;
+        const matchedPaths = routePaths.filter((path, idx) => !path.startsWith(":") && path === reqPaths[idx]);
+        return matchedPaths.length === routePaths.filter((p) => !p.startsWith(":")).length ? true : false;
     } else { return false; }
+};
+
+export const extractParams = <T>(reqUrl: string, routeUrl: string) => {
+    const reqPaths = reqUrl.split("/").slice(1);
+    const routePaths = routeUrl.split("/").slice(1);
+    const routePathAndIndex: Array<[string, number]> = routePaths.map<[string, number]>((path, idx) => [path, idx]);
+    const extractedPath = routePathAndIndex.filter(([path, rouidx], reqidx) => path.startsWith(":"));
+    const params: any = {};
+    for (const [path, index] of extractedPath) {
+        params[path.substr(1)] = reqPaths[index];
+    }
+    return params as T;
 };
 
 export class RouteService {

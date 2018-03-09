@@ -18,7 +18,6 @@ describe("http client", () => {
         routeService.post("/test", (ctx) => { ctx.res.end(JSON.stringify(reqResult), "utf-8"); });
         routeService.post<{ id: number }>("/user/:id", (ctx) => {
             const id = ctx.req.param.id;
-            console.info(ctx.req.body.toString(), 9999999999999999999999999);
             const name = JSON.parse(ctx.req.body.toString()).name;
             ctx.res.end(JSON.stringify({ name: name + "-" + id }), "utf-8");
 
@@ -53,12 +52,15 @@ describe("http client", () => {
         });
     });
 
-    it(`http client post response return xiaoming-1`, (done) => {
-        const options = httpClient.markOptions("127.0.0.1", "POST", "/user/1", port);
-        const pResult = httpClient.httpRequest<{ name: string }>(options, `{"name":"xiaoming"}`);
-        pResult.then((result) => {
-            assert.equal(result.name, "xiaoming-1");
-            done();
+    const testdata3 = [1, 2, 3, 4];
+    testdata3.forEach((id) => {
+        it(`http client post response return xiaoming-${id}`, (done) => {
+            const options = httpClient.markOptions("127.0.0.1", "POST", `/user/${id}`, port);
+            const pResult = httpClient.httpRequest<{ name: string }>(options, `{"name":"xiaoming"}`);
+            pResult.then((result) => {
+                assert.equal(result.name, `xiaoming-${id}`);
+                done();
+            });
         });
     });
 
