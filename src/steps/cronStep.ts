@@ -1,17 +1,16 @@
-import { IStep } from "../step";
+import { IEmitDownStream, IStep } from "../step";
 
-function CronStep<P, M>(name: string, interval: number, points: P[], execFunc: (point: P) => Promise<M[]>,
-                        single: boolean = true): IStep {
+export function CronStep<P, M>(name: string, interval: number, points: P[],
+                               execFunc: (point: P) => Promise<M[]>,
+                               single: boolean = true): IStep {
     name = "Cron-" + name;
-    const selfProcess = (emit: any) => {
+    const selfProcess = (emit: IEmitDownStream<P, M[]>) => {
         setInterval(() => {
             const currDate = (new Date()).getTime();
-            points.forEach((p) => {
-                execFunc(p)
-                    .then((r) => {
-                        if (single) { r.forEach((x) => emit(p, x)); } else { emit(p, r); }
-                    })
-                    .catch((e) => console.error(p, e));
+            points.forEach((point) => {
+                execFunc(point).then((elems) => {
+                    if (single) { elems.forEach((elem) => emit(point, [elem])); } else { emit(point, elems); }
+                }).catch((e) => console.error(point, e));
             });
         }, interval);
     };

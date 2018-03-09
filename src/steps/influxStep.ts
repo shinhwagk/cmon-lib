@@ -2,9 +2,9 @@ import * as Influx from "influx";
 
 import { IStep } from "../step";
 
-function InfluxStep<P, M>(name: string, database: string, measurement: string,
-                          tags: (point: P, elem: M) => {},
-                          values: (point: P, elem: M) => {}): IStep {
+export function InfluxStep<P, M>(name: string, database: string, measurement: string,
+                                 tags: (point: P, elem: M) => {},
+                                 values: (point: P, elem: M) => {}): IStep {
     name = "Influx-" + name;
 
     const influx = new Influx.InfluxDB({ host: "influxdb.cmons.org", database });

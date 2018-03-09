@@ -12,25 +12,31 @@ export interface IReqCtx<T> {
     param: T;
 }
 
-export const createHttpServer = (...router: IRoute[]) => http.createServer(
-    (request: http.IncomingMessage, response: http.ServerResponse) => {
-        const route: IRoute = router.filter(routeMatch(request.method as string, request.url as string))[0];
-        const ctx: ICtx<any> = {} as ICtx<any>;
-        if (route) {
-            const body: Buffer[] = [];
-            request.on("data", (chunk: Buffer) => {
-                body.push(chunk);
-                ctx.req.body = body;
-                ctx.req.param = JSON.parse(body.toString());
-                ctx.res = response;
-            });
-            request.on("end", () => route.handler(ctx));
-        } else {
-            response.writeHead(500);
-            response.end("route not match.");
-        }
-
+export function createHttpServer(...router: IRoute[]) {
+    const server = http.createServer(
+        (request: http.IncomingMessage, response: http.ServerResponse) => {
+            const route: IRoute = router.filter(routeMatch(request.method as string, request.url as string))[0];
+            const ctx: ICtx<any> = { res: response } as ICtx<any>;
+            console.info(Object.keys(ctx), 99999);
+            ctx.res.setHeader("Content-Type", "application/json");
+            if (route) {
+                const body: Buffer[] = [];
+                request.on("data", (chunk: Buffer) => {
+                    body.push(chunk);
+                    ctx.req.body = body;
+                    ctx.req.param = { id: 1 };
+                });
+                request.on("end", () => route.handler(ctx));
+            } else {
+                response.writeHead(500);
+                response.end("route not match.");
+            }
+        });
+    server.on("clientError", (err, socket) => {
+        socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
     });
+    return server;
+}
 
 export const routeMatch = (reqMethod: string, reqUrl: string) => (route: IRoute) => {
     if (reqMethod === route.method) {
@@ -41,7 +47,7 @@ export const routeMatch = (reqMethod: string, reqUrl: string) => (route: IRoute)
     } else { return false; }
 };
 
-class RouteServer {
+export class RouteService {
     public routes: IRoute[] = [];
 
     public get<T>(path: string, handler: (ctx: ICtx<T>) => void) {
