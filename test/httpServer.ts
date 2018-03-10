@@ -3,7 +3,7 @@ import * as mocha from "mocha";
 
 import * as httpServer from "../src/httpServer";
 
-describe("route url not match", () => {
+describe("test rest route url match", () => {
 
     const handler = (ctx: any) => "aa";
 
@@ -13,7 +13,7 @@ describe("route url not match", () => {
         { request: ["POST", "/"], route: { method: "POST", path: "/", handler } },
     ];
     testData1.forEach((test) => {
-        it(`request url match test route url: "${test.request[1]}" ==> "${test.route.path}" args`, () => {
+        it(`request url match route url: "${test.request[1]}" ==> "${test.route.path}" args`, () => {
             const matched = httpServer.routeMatch(test.request[0], test.request[1])(test.route);
             assert.ok(matched);
         });
@@ -25,14 +25,14 @@ describe("route url not match", () => {
         { request: ["POST", "/1"], route: { method: "POST", path: "/", handler } },
     ];
     testData2.forEach((test) => {
-        it(`request url not match test route url: "${test.request[1]}" => "${test.route.path}" args`, () => {
+        it(`request url not match route url: "${test.request[1]}" => "${test.route.path}" args`, () => {
             const matched = httpServer.routeMatch(test.request[0], test.request[1])(test.route);
             assert.ok(!matched);
         });
     });
 });
 
-describe("extract url parameter", () => {
+describe("test extract url parameter", () => {
     const testdata1: [string, string] = ["/test/1", "/test/:id"];
     const testdata2 = ["/test/1/name/xiaoming", "/test/:id/name/:name"];
     const testdata3 = ["/test/1/val/22", "/test/:id/val/:val"];
