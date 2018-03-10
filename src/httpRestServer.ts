@@ -12,7 +12,7 @@ export interface IReqCtx<T> {
     param: T;
 }
 
-export function createHttpServer(...router: IRoute[]) {
+export function createHttpRestServer(...router: IRoute[]) {
     const server = http.createServer(
         (request: http.IncomingMessage, response: http.ServerResponse) => {
             const route: IRoute = router.filter(routeMatch(request.method as string, request.url as string))[0];
@@ -20,17 +20,14 @@ export function createHttpServer(...router: IRoute[]) {
             const ctx: ICtx<any> = { res: response, req: reqctx } as ICtx<any>;
             ctx.res.setHeader("Content-Type", "application/json");
             if (route) {
-                const params = extractParams(request.url as string, route.path as string);
+                const params = extractReqUrlParams(request.url as string, route.path as string);
                 const body: Buffer[] = [];
                 request.on("data", (chunk: Buffer) => {
-                    body.push(chunk);
-                    ctx.req.body = body;
-                    ctx.req.param = params;
+                    body.push(chunk); ctx.req.body = body; ctx.req.param = params;
                 });
                 request.on("end", () => route.handler(ctx));
             } else {
-                response.writeHead(500);
-                response.end("route not match.");
+                response.writeHead(500); response.end("route not match.");
             }
         });
     server.on("clientError", (err, socket) => {
@@ -48,7 +45,7 @@ export const routeMatch = (reqMethod: string, reqUrl: string) => (routeUrl: IRou
     } else { return false; }
 };
 
-export const extractParams = <T>(reqUrl: string, routeUrl: string) => {
+export const extractReqUrlParams = <T>(reqUrl: string, routeUrl: string) => {
     const reqPaths = reqUrl.split("/").slice(1);
     const routePaths = routeUrl.split("/").slice(1);
     const routePathAndIndex: Array<[string, number]> = routePaths.map<[string, number]>((path, idx) => [path, idx]);

@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as mocha from "mocha";
 
-import * as httpServer from "../src/httpServer";
+import * as httpServer from "../src/httpRestServer";
 
 describe("test rest route url match", () => {
 
@@ -39,18 +39,18 @@ describe("test extract url parameter", () => {
 
     it("params id === 1", () => {
         const [reqUrl, routeUrl] = testdata1;
-        const params = httpServer.extractParams<{ id: number }>(reqUrl, routeUrl);
+        const params = httpServer.extractReqUrlParams<{ id: number }>(reqUrl, routeUrl);
         assert.equal(params.id, 1);
     });
     it("params id === 1, name === xiaoming", () => {
         const [reqUrl, routeUrl] = testdata2;
-        const params = httpServer.extractParams<{ id: number, name: string }>(reqUrl, routeUrl);
+        const params = httpServer.extractReqUrlParams<{ id: number, name: string }>(reqUrl, routeUrl);
         assert.equal(params.id, 1);
     });
 
     it("params id === 1, name === xiaoming", () => {
         const [reqUrl, routeUrl] = testdata3;
-        const params = httpServer.extractParams<{ id: number, name: string }>(reqUrl, routeUrl);
+        const params = httpServer.extractReqUrlParams<{ id: number, name: string }>(reqUrl, routeUrl);
         assert.notEqual(params.id, 2);
     });
 

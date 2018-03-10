@@ -5,7 +5,7 @@ function markOptions(hostname: string, method: string, path: string, port: numbe
     return { headers, hostname, method, path, port };
 }
 
-function httpRequest<R>(options: http.RequestOptions, reqbody?: string): Promise<R> {
+function createHttpRestClient<R>(options: http.RequestOptions, reqbody?: string): Promise<R> {
     return new Promise((resolve, reject) => {
         const req = http.request(options, (res) => {
             res.setEncoding("utf8");
@@ -24,4 +24,4 @@ function httpRequest<R>(options: http.RequestOptions, reqbody?: string): Promise
     });
 }
 
-export { markOptions, httpRequest };
+export { markOptions, createHttpRestClient };
