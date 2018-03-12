@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.js",
   "scripts": {
-    "lint": "tslint",
+    "lint": "tslint --fix",
     "build": "tsc -p tsconfig.publish.json && npm publish --tag beta",
     "test": "tsc -p tsconfig.test.json && mocha dist/test/**/*.js"
   },
