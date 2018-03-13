@@ -1,4 +1,4 @@
-import { createHttpRestServer, ICtx, IRoute } from "../httpRestServer";
+import { createHttpRestServer, ICtx, IRoute } from "../httpRest/httpRestServer";
 
 import { IEmitDownStream, IStep } from "../step";
 

@@ -1,11 +1,11 @@
 import * as assert from "assert";
-import * as mocha from "mocha";
+// import * as mocha from "mocha";
 
-import * as httpServer from "../src/httpRestServer";
+import * as httpServer from "../src/httpRest/httpRestServer";
 
 describe("test rest route url match", () => {
 
-    const handler = (ctx: any) => "aa";
+    const handler = () => "aa";
 
     const testData1 = [
         { request: ["POST", "/user/1/a"], route: { method: "POST", path: "/user/:id/a", handler } },

@@ -30,7 +30,7 @@ export function createHttpRestServer(...router: IRoute[]) {
                 response.writeHead(500); response.end("route not match.");
             }
         });
-    server.on("clientError", (err, socket) => {
+    server.on("clientError", (socket) => {
         socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
     });
     return server;
@@ -49,7 +49,7 @@ export const extractReqUrlParams = <T>(reqUrl: string, routeUrl: string) => {
     const reqPaths = reqUrl.split("/").slice(1);
     const routePaths = routeUrl.split("/").slice(1);
     const routePathAndIndex: Array<[string, number]> = routePaths.map<[string, number]>((path, idx) => [path, idx]);
-    const extractedPath = routePathAndIndex.filter(([path, rouidx], reqidx) => path.startsWith(":"));
+    const extractedPath = routePathAndIndex.filter(([path,]) => path.startsWith(":"));
     const params: any = {};
     for (const [path, index] of extractedPath) {
         params[path.substr(1)] = reqPaths[index];

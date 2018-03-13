@@ -1,13 +1,5 @@
-import { createHttpRestClient, markOptions } from "./httpRestClient";
-import { createHttpRestServer, RouteService } from "./httpRestServer";
+import * as httpRest from "./httpRest.index";
+import * as steps from "./steps.index";
+import * as task from "./task";
 
-import { Grap, IStep } from "./step";
-import { CronStep } from "./steps/cronStep";
-import { FilterStep } from "./steps/filterStep";
-
-const httpRestClient = { createHttpRestClient, markOptions };
-const httpRestServer = { createHttpRestServer, RouteService };
-
-const steps = { CronStep, FilterStep, Grap };
-
-export { httpRestClient, httpRestServer, steps };
+export { httpRest, steps, task }

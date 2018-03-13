@@ -1,6 +1,6 @@
 import * as Influx from "influx";
 
-import { IEmitDownStream, IStep } from "../step";
+import { IStep } from "../step";
 
 export function InfluxStep<P, M>(name: string, database: string, measurement: string,
                                  tags: (point: P, elem: M) => {},
@@ -9,7 +9,7 @@ export function InfluxStep<P, M>(name: string, database: string, measurement: st
 
     const influx = new Influx.InfluxDB({ host: "influxdb.cmons.org", database });
 
-    const stepProcess = (emit: IEmitDownStream<P, M>) => (point: P, elem: M) => {
+    const stepProcess = () => (point: P, elem: M) => {
         console.info(new Date(), elem, point, tags(point, elem), values(point, elem));
         influx.writePoints([
             {

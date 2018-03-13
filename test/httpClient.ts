@@ -1,13 +1,13 @@
 import * as assert from "assert";
 import * as http from "http";
-import * as mocha from "mocha";
+// import * as mocha from "mocha";
 
-import * as httpRestClient from "../src/httpRestClient";
-import * as httpRestServer from "../src/httpRestServer";
+import * as httpRestClient from "../src/httpRest/httpRestClient";
+import * as httpRestServer from "../src/httpRest/httpRestServer";
 
 describe("test http rest client", () => {
     const port = 9000;
-    const postBody = `{”name“:"world"}`;
+    // const postBody = `{”name“:"world"}`;
     let hs: http.Server;
 
     before(() => {
@@ -26,7 +26,7 @@ describe("test http rest client", () => {
     });
 
     it(`http client get response return hello1`, (done) => {
-        const options = httpRestClient.markOptions("127.0.0.1", "GET", "/", port);
+        const options = httpRestClient.ReqOptions("127.0.0.1", "GET", "/", port);
         const pResult = httpRestClient.createHttpRestClient<{ name: string }>(options);
         pResult.then((result) => {
             assert.equal(result.name, "hello");
@@ -35,7 +35,7 @@ describe("test http rest client", () => {
     });
 
     it(`http client get response return hello2`, (done) => {
-        const options = httpRestClient.markOptions("127.0.0.1", "GET", "/test", port);
+        const options = httpRestClient.ReqOptions("127.0.0.1", "GET", "/test", port);
         const pResult = httpRestClient.createHttpRestClient<{ name: string }>(options);
         pResult.then((result) => {
             assert.equal(result.name, "hello");
@@ -44,7 +44,7 @@ describe("test http rest client", () => {
     });
 
     it(`http client post response return hello2`, (done) => {
-        const options = httpRestClient.markOptions("127.0.0.1", "POST", "/test", port);
+        const options = httpRestClient.ReqOptions("127.0.0.1", "POST", "/test", port);
         const pResult = httpRestClient.createHttpRestClient<{ name: string }>(options);
         pResult.then((result) => {
             assert.equal(result.name, "hello");
@@ -55,7 +55,7 @@ describe("test http rest client", () => {
     const testdata3 = [1, 2, 3, 4];
     testdata3.forEach((id) => {
         it(`http client post response return xiaoming-${id}`, (done) => {
-            const options = httpRestClient.markOptions("127.0.0.1", "POST", `/user/${id}`, port);
+            const options = httpRestClient.ReqOptions("127.0.0.1", "POST", `/user/${id}`, port);
             const pResult = httpRestClient.createHttpRestClient<{ name: string }>(options, `{"name":"xiaoming"}`);
             pResult.then((result) => {
                 assert.equal(result.name, `xiaoming-${id}`);

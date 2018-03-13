@@ -3,17 +3,11 @@ import * as http from "http";
 
 import { IStep } from "./step";
 
-function RunTasks(flow: Array<[IStep, IStep[]]>) {
+function RunTasks(flow: Array<[IStep<any, any>, Array<IStep<any, any>>]>) {
     const ee: EventEmitter = new EventEmitter();
     const isds: { [name: string]: string[] } = {};
-    const dSteps: IStep[] = [];
+    const dSteps: IStep<any, any>[] = [];
 
-    const emit = (...pnames: string[]) => (point: any, data: any) => {
-        pnames.forEach((dname) => {
-            console.info(`send to ${dname}, point:${point.name}.`);
-            ee.emit(dname, point, data);
-        });
-    };
 
     const registerDownStream = (name: string, pname: string) => {
         if (!isds[name]) { isds[name] = []; }
@@ -24,7 +18,7 @@ function RunTasks(flow: Array<[IStep, IStep[]]>) {
         ee.on(name, listener);
     };
 
-    const addStepIfNoExist = (is: IStep) => { if (dSteps.indexOf(is) === -1) { dSteps.push(is); } };
+    const addStepIfNoExist = (is: IStep<any, any>) => { if (dSteps.indexOf(is) === -1) { dSteps.push(is); } };
 
     if (flow.length <= 1) {
         console.error("flow empty.");
@@ -32,7 +26,7 @@ function RunTasks(flow: Array<[IStep, IStep[]]>) {
     } else {
         for (const [is, diss] of flow) { // down stream istep
 
-            const { name, stepProcess, selfProcess } = is;
+            const { name, } = is;
 
             addStepIfNoExist(is);
 
@@ -69,7 +63,7 @@ function RunTasks(flow: Array<[IStep, IStep[]]>) {
 
 import * as fs from "fs";
 const execCommand = <P extends { ip: string }, M>(name: string) => (p: P) => {
-    return new Promise<M[]>((r, x) => {
+    return new Promise<M[]>((r) => {
         http.get(`http://${p.ip}:8000/v1/script/${name}`, (res) => {
             const body: Buffer[] = [];
             res.on("data", (chunk: Buffer) => body.push(chunk));

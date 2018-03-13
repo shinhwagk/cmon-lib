@@ -1,6 +1,6 @@
 import * as http from "http";
 
-function markOptions(hostname: string, method: string, path: string, port: number): http.RequestOptions {
+function ReqOptions(hostname: string, method: string, path: string, port: number): http.RequestOptions {
     const headers: http.OutgoingHttpHeaders = method === "GET" ? {} : { "Content-Type": "application/json" };
     return { headers, hostname, method, path, port };
 }
@@ -24,4 +24,4 @@ function createHttpRestClient<R>(options: http.RequestOptions, reqbody?: string)
     });
 }
 
-export { markOptions, createHttpRestClient };
+export { ReqOptions, createHttpRestClient };
