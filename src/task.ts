@@ -1,9 +1,8 @@
 import { EventEmitter } from "events";
-import * as http from "http";
 
 import { IStep } from "./step";
 
-function RunTasks(flow: Array<[IStep<any, any>, Array<IStep<any, any>>]>) {
+export function RunTasks(flow: Array<[IStep<any, any>, Array<IStep<any, any>>]>) {
     const ee: EventEmitter = new EventEmitter();
     const isds: { [name: string]: string[] } = {};
     const dSteps: IStep<any, any>[] = [];
@@ -60,46 +59,3 @@ function RunTasks(flow: Array<[IStep<any, any>, Array<IStep<any, any>>]>) {
 
     startFlow();
 }
-
-import * as fs from "fs";
-const execCommand = <P extends { ip: string }, M>(name: string) => (p: P) => {
-    return new Promise<M[]>((r) => {
-        http.get(`http://${p.ip}:8000/v1/script/${name}`, (res) => {
-            const body: Buffer[] = [];
-            res.on("data", (chunk: Buffer) => body.push(chunk));
-            res.on("end", () => {
-                try {
-                    r(JSON.parse(body.toString()) as M[]);
-                } catch (e) {
-                    console.error("error str " + body + "error str .");
-                    console.error(`${e},${body.toString()}`);
-                    fs.writeFile("./error.log", e + body.toString(), (e) => console.error(e));
-                }
-            });
-        }).on("error", (e) => console.error(e));
-    });
-};
-
-const execSql = <P extends { name: string }, R>(sql: string, args: any[]) => (p: P) => {
-    const postOptions: http.RequestOptions = {
-        headers: { "Content-Type": "application/json" },
-        hostname: "sql.cmon.org",
-        method: "POST",
-        path: `/v1/sql/${p.name}`,
-        port: "9500",
-    };
-    return new Promise<R[]>((r, x) => {
-        const req = http.request(postOptions, (res) => {
-            const data: Buffer[] = [];
-            res.on("data", (chunk: Buffer) => data.push(chunk));
-            res.on("end", () => {
-                try { r(JSON.parse(data.toString()) as R[]); } catch (e) { x(e); }
-            });
-            res.on("error", (e) => x(e));
-        });
-        req.write(JSON.stringify([sql, args]));
-        req.end();
-    });
-};
-
-export { execSql, execCommand, RunTasks };

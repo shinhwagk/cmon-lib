@@ -8,4 +8,4 @@ export interface IStepProcess<P, M> {
 
 export type IEmitDownStream<P, M> = (point: P, metric: M) => void;
 
-export const Grap = <P, Out, In>(u: IStep<P, Out>, d: Array<IStep<P, In>>) => [u, d];
+export function Grap<P, Out, In>(u: IStep<P, Out>, ...d: Array<IStep<P, In>>): [IStep<P, Out>, Array<IStep<P, In>>] { return [u, d] }

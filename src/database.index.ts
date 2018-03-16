@@ -1,0 +1,1 @@
+export { query } from "./database/mysql/query";
