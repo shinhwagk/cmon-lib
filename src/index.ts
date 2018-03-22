@@ -4,5 +4,6 @@ import * as task from "./task";
 import * as command from "./command.index";
 import * as endpoint from "./enpoint.index";
 import * as database from "./database.index";
+import * as consul from "./consul.index";
 
-export { httpRest, steps, task, command, endpoint, database }
+export { httpRest, steps, task, command, endpoint, database, consul }

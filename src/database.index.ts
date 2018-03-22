@@ -1,1 +1,1 @@
-export { query } from "./database/mysql/query";
+export { query, futureQuery } from "./database/mysql/query";

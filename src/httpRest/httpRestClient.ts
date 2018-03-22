@@ -1,7 +1,7 @@
 import * as http from "http";
 
 function ReqOptions(hostname: string, method: string, path: string, port: number): http.RequestOptions {
-    const headers: http.OutgoingHttpHeaders = method === "GET" ? {} : { "Content-Type": "application/json" };
+    const headers: http.OutgoingHttpHeaders = method.toLocaleUpperCase() === "GET" ? {} : { "Content-Type": "application/json" };
     return { headers, hostname, method, path, port };
 }
 

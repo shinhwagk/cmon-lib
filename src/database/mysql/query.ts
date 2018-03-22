@@ -8,3 +8,14 @@ export function query<R>(connConf: mysql.ConnectionConfig, sql: string, callback
     });
     connection.end();
 }
+
+export function futureQuery<R>(connConf: mysql.ConnectionConfig, sql: string): Promise<R[]> {
+    return new Promise((res, rej) => {
+        const connection = mysql.createConnection(connConf);
+        connection.connect();
+        connection.query(sql, (error, results) => {
+            if (error) rej(error); res(results as R[]);
+        });
+        connection.end();
+    })
+}

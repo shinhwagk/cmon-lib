@@ -1,0 +1,1 @@
+export { getServiceByName } from "./consul/client"

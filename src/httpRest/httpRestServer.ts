@@ -22,10 +22,8 @@ export function createHttpRestServer(...router: IRoute[]) {
             if (route) {
                 const params = extractReqUrlParams(request.url as string, route.path as string);
                 const body: Buffer[] = [];
-                request.on("data", (chunk: Buffer) => {
-                    body.push(chunk); ctx.req.body = body; ctx.req.param = params;
-                });
-                request.on("end", () => route.handler(ctx));
+                request.on("data", (chunk: Buffer) => body.push(chunk));
+                request.on("end", () => { ctx.req.body = body; ctx.req.param = params; route.handler(ctx) });
             } else {
                 response.writeHead(500); response.end("route not match.");
             }
