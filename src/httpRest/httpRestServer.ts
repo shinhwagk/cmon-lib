@@ -28,7 +28,8 @@ export function createHttpRestServer(...router: IRoute[]) {
                 response.writeHead(500); response.end("route not match.");
             }
         });
-    server.on("clientError", (socket) => {
+    server.on("clientError", (err, socket) => {
+        console.info(err)
         socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
     });
     return server;
